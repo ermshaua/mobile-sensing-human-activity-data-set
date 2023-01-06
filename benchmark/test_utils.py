@@ -11,8 +11,8 @@ from benchmark.metrics import f_measure, covering
 from tqdm import tqdm
 
 
-def evaluate_clasp(dataset, routine, subject, sensor, sample_rate, cps, ts, **seg_kwargs):
-    profile, window_size, found_cps, scores = segmentation(ts, n_change_points=len(cps), offset=int(100/ts.shape[0]), **seg_kwargs)
+def evaluate_clasp(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
+    profile, window_size, found_cps, scores = segmentation(ts, n_change_points=len(cps), offset=int(250/ts.shape[0]), **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
     covering_score = covering({0: cps}, found_cps, ts.shape[0])
@@ -21,7 +21,7 @@ def evaluate_clasp(dataset, routine, subject, sensor, sample_rate, cps, ts, **se
     return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3), profile.tolist()
 
 
-def evaluate_floss(dataset, routine, subject, sensor, sample_rate, cps, ts, **seg_kwargs):
+def evaluate_floss(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
     profile, found_cps = floss(ts, sample_rate, n_cps=len(cps), return_cac=True, **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
@@ -31,8 +31,8 @@ def evaluate_floss(dataset, routine, subject, sensor, sample_rate, cps, ts, **se
     return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3), profile.tolist()
 
 
-def evaluate_binseg(dataset, routine, subject, sensor, sample_rate, cps, ts, **seg_kwargs):
-    found_cps = binseg(ts, n_cps=len(cps), offset=int(100/ts.shape[0]), **seg_kwargs)
+def evaluate_binseg(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
+    found_cps = binseg(ts, n_cps=len(cps), offset=int(250/ts.shape[0]), **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
     covering_score = covering({0: cps}, found_cps, ts.shape[0])
@@ -41,8 +41,8 @@ def evaluate_binseg(dataset, routine, subject, sensor, sample_rate, cps, ts, **s
     return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3)
 
 
-def evaluate_window(dataset, routine, subject, sensor, sample_rate, cps, ts, **seg_kwargs):
-    found_cps = window(ts, 5*sample_rate, n_cps=len(cps), offset=int(100/ts.shape[0]), **seg_kwargs)
+def evaluate_window(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
+    found_cps = window(ts, 5*sample_rate, n_cps=len(cps), offset=int(250/ts.shape[0]), **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
     covering_score = covering({0: cps}, found_cps, ts.shape[0])
@@ -67,7 +67,7 @@ def evaluate_candidate(candidate_name, eval_func, columns=None, n_jobs=1, verbos
 
     df_cand = pd.DataFrame.from_records(
         df_cand,
-        index="name",
+        index="dataset",
         columns=columns,
     )
 

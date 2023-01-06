@@ -16,10 +16,10 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
     os.mkdir(exp_path + name)
 
     competitors = [
-        ("ClaSP", evaluate_clasp),
+        # ("ClaSP", evaluate_clasp),
         ("FLOSS", evaluate_floss),
-        ("BinSeg", evaluate_binseg),
-        ("Window", evaluate_window)
+        # ("BinSeg", evaluate_binseg),
+        # ("Window", evaluate_window)
     ]
 
     for candidate_name, eval_func in competitors:
@@ -43,7 +43,7 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
 
 if __name__ == '__main__':
     exp_path = "../experiments/"
-    n_jobs, verbose = 60, 0
+    n_jobs, verbose = 1, 0
 
     if not os.path.exists(exp_path):
         os.mkdir(exp_path)

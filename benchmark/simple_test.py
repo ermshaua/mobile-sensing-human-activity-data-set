@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     df = load_mosad_dataset().iloc[0:1,:]
 
-    for _, (dataset, routine, subject, sensor, sample_rate, change_points, time_series) in df.iterrows():
+    for _, (dataset, routine, subject, sensor, sample_rate, change_points, activities, time_series) in df.iterrows():
         runtime = time.process_time()
         profile, window_size, found_cps, found_scores = segmentation(time_series, n_change_points=len(change_points), offset=int(200 / time_series.shape[0]))
         # profile, found_cps = floss(time_series, sample_rate, len(change_points), return_cac=True)

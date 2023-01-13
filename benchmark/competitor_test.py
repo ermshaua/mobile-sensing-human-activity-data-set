@@ -4,7 +4,7 @@ sys.path.insert(0, "../")
 import numpy as np
 np.random.seed(1379)
 
-from benchmark.test_utils import evaluate_clasp, evaluate_floss, evaluate_binseg, evaluate_window, evaluate_candidate
+from benchmark.test_utils import evaluate_clasp, evaluate_floss, evaluate_binseg, evaluate_window, evaluate_bocd, evaluate_espresso, evaluate_candidate
 
 
 def evaluate_competitor(exp_path, n_jobs, verbose):
@@ -17,9 +17,11 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
 
     competitors = [
         # ("ClaSP", evaluate_clasp),
-        ("FLOSS", evaluate_floss),
+        # ("FLUSS", evaluate_floss),
         # ("BinSeg", evaluate_binseg),
-        # ("Window", evaluate_window)
+        # ("BOCD", evaluate_bocd)
+        # ("Window", evaluate_window),
+        ("ESPRESSO", evaluate_espresso)
     ]
 
     for candidate_name, eval_func in competitors:
@@ -27,7 +29,7 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
 
         columns = None
 
-        if candidate_name in ("ClaSP", "FLOSS"):
+        if candidate_name in ("ClaSP", "FLUSS", "FLOSS"):
             columns = ["dataset", "true_cps", "found_cps", "f1_score", "covering_score", "profile"]
 
         df = evaluate_candidate(
@@ -43,7 +45,7 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
 
 if __name__ == '__main__':
     exp_path = "../experiments/"
-    n_jobs, verbose = 1, 0
+    n_jobs, verbose = 10, 0
 
     if not os.path.exists(exp_path):
         os.mkdir(exp_path)

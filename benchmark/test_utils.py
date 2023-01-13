@@ -3,9 +3,11 @@ import pandas as pd
 import daproli as dp
 
 from src.clasp.segmentation import segmentation
-from src.competitor.floss import floss
+from src.competitor.floss import floss, fluss
 from src.competitor.binseg import binseg
 from src.competitor.window import window
+from src.competitor.espresso import espresso
+from src.competitor.bocd import bocd
 from src.utils import load_mosad_dataset
 from benchmark.metrics import f_measure, covering
 from tqdm import tqdm
@@ -22,13 +24,25 @@ def evaluate_clasp(dataset, routine, subject, sensor, sample_rate, cps, activiti
 
 
 def evaluate_floss(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
-    profile, found_cps = floss(ts, sample_rate, n_cps=len(cps), return_cac=True, **seg_kwargs)
+    # profile, found_cps = floss(ts, 20*sample_rate, sample_rate, n_cps=len(cps), return_cac=True, **seg_kwargs)
+    profile, found_cps = fluss(ts, sample_rate, n_cps=len(cps), return_cac=True, **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
     covering_score = covering({0: cps}, found_cps, ts.shape[0])
 
     # print(f"{dataset}: F1-Score: {np.round(f1_score, 3)}, Covering-Score: {np.round(covering_score, 3)}")
     return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3), profile.tolist()
+
+
+def evaluate_espresso(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
+    found_cps = espresso(ts, sample_rate, n_cps=len(cps), **seg_kwargs)
+    # found_cps = []
+
+    f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
+    covering_score = covering({0: cps}, found_cps, ts.shape[0])
+
+    print(f"{dataset}: F1-Score: {np.round(f1_score, 3)}, Covering-Score: {np.round(covering_score, 3)}")
+    return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3)
 
 
 def evaluate_binseg(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
@@ -43,6 +57,16 @@ def evaluate_binseg(dataset, routine, subject, sensor, sample_rate, cps, activit
 
 def evaluate_window(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
     found_cps = window(ts, 5*sample_rate, n_cps=len(cps), offset=int(250/ts.shape[0]), **seg_kwargs)
+
+    f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
+    covering_score = covering({0: cps}, found_cps, ts.shape[0])
+
+    # print(f"{dataset}: F1-Score: {np.round(f1_score, 3)}, Covering-Score: {np.round(covering_score, 3)}")
+    return dataset, cps.tolist(), found_cps.tolist(), np.round(f1_score, 3), np.round(covering_score, 3)
+
+
+def evaluate_bocd(dataset, routine, subject, sensor, sample_rate, cps, activities, ts, **seg_kwargs):
+    found_cps = bocd(ts, n_cps=len(cps), **seg_kwargs)
 
     f1_score = f_measure({0: cps}, found_cps, margin=int(ts.shape[0] * .01))
     covering_score = covering({0: cps}, found_cps, ts.shape[0])

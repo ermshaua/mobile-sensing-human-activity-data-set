@@ -1,6 +1,5 @@
 import numpy as np
 
-from stumpy.floss import _rea
 from bocd import BayesianOnlineChangePointDetection, ConstantHazard,StudentT
 
 

@@ -4,24 +4,22 @@ sys.path.insert(0, "../")
 import numpy as np
 np.random.seed(1379)
 
-from benchmark.test_utils import evaluate_clasp, evaluate_floss, evaluate_binseg, evaluate_window, evaluate_bocd, evaluate_espresso, evaluate_candidate
+from benchmark.test_utils import evaluate_clasp, evaluate_floss, evaluate_binseg, evaluate_window, evaluate_bocd, evaluate_candidate # ,evaluate_espresso
 
 
 def evaluate_competitor(exp_path, n_jobs, verbose):
-    name = f"competitor"
+    if os.path.exists(exp_path):
+        shutil.rmtree(exp_path)
 
-    if os.path.exists(exp_path + name):
-        shutil.rmtree(exp_path + name)
-
-    os.mkdir(exp_path + name)
+    os.mkdir(exp_path)
 
     competitors = [
-        # ("ClaSP", evaluate_clasp),
-        # ("FLUSS", evaluate_floss),
-        # ("BinSeg", evaluate_binseg),
-        # ("BOCD", evaluate_bocd)
-        # ("Window", evaluate_window),
-        ("ESPRESSO", evaluate_espresso)
+        ("ClaSP", evaluate_clasp),
+        ("FLOSS", evaluate_floss),
+        # ("ESPRESSO", evaluate_espresso),
+        ("BinSeg", evaluate_binseg),
+        ("Window", evaluate_window),
+        ("BOCD", evaluate_bocd)
     ]
 
     for candidate_name, eval_func in competitors:
@@ -40,12 +38,12 @@ def evaluate_competitor(exp_path, n_jobs, verbose):
             verbose=verbose,
         )
 
-        df.to_csv(f"{exp_path}{name}/{candidate_name}.csv.gz", compression='gzip')
+        df.to_csv(f"{exp_path}{candidate_name}.csv.gz", compression='gzip')
 
 
 if __name__ == '__main__':
     exp_path = "../experiments/"
-    n_jobs, verbose = 10, 0
+    n_jobs, verbose = 4, 0
 
     if not os.path.exists(exp_path):
         os.mkdir(exp_path)

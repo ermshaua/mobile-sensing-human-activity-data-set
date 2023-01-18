@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from src.clasp.profile import _labels, binary_roc_auc_score
-from src.clasp.profile import ClaSPEnsemble
+from src.competitors.clasp.profile import _labels, binary_roc_auc_score
+from src.competitors.clasp.profile import ClaSPEnsemble
 
-from src.clasp.suss import suss
+from src.competitors.clasp.suss import suss
 
 from queue import PriorityQueue
 from scipy.stats import ranksums
@@ -16,7 +16,7 @@ def rank_sums_test(knn, change_point, window_size, threshold=1e-15):
     return p <= threshold
 
 
-def segmentation(time_series, window_size=None, n_change_points=None, min_seg_size=None, k_neighbours=3, n_iter=30, score=binary_roc_auc_score, threshold=1e-15, offset=.05):
+def clasp_segmentation(time_series, window_size=None, n_change_points=None, min_seg_size=None, k_neighbours=3, n_iter=30, score=binary_roc_auc_score, threshold=1e-15, offset=.05):
     queue = PriorityQueue()
 
     if window_size is None:

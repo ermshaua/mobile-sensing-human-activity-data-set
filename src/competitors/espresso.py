@@ -8,7 +8,7 @@ def espresso(ts, window_size, n_cps, chain_length=3, eng=None):
 
     if eng is None:
         eng = matlab.engine.start_matlab()
-        s = eng.genpath("../src/competitor/ESPRESSO")
+        s = eng.genpath("../src/competitors/ESPRESSO")
         eng.addpath(s, nargout=0)
         close_eng = True
 

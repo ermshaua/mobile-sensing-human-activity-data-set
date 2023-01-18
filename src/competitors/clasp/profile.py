@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from src.clasp.knn import IntervalKneighbours
+from src.competitors.clasp.knn import IntervalKneighbours
 from numba import njit
 
 

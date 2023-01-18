@@ -1,6 +1,6 @@
 import numpy as np
-
 import stumpy
+
 from stumpy.floss import _rea
 
 

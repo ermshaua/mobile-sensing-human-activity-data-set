@@ -3,6 +3,15 @@ This is the supporting website for the paper "Time Series Segmentation Applied t
 
 Human activity recognition (HAR) systems are advanced machine learning (ML) workflows that automatically detect activities from motion data, captured e.g. by wearable devices such as smartphones. These devices contain multiple sensors that record human motion as acceleration, rotation and orientation in long time series (TS) data. As a first step, HAR methods typically partition such recordings into smaller subsequences before applying more advanced feature extraction and classification techniques. In this study, we evaluate the performance of 6 classical and recently published state-of-the-art TS segmentation (TSS) algorithms on a new large HAR benchmark of 126 TS, called MOSAD, recorded with 6 participants using recent smartphone sensors. Our results show that the ClaSP algorithm achieves significantly more accurate results compared to the other methods, scoring the best segmentations in 57 out of 126 TS. This indicates that ClaSP can be a viable solution for TSS in HAR systems. Additionally, the FLOSS algorithm also shows promising results, particularly for long TS with many segments. However, there is still scope for performance improvements and further research is needed.
 
+You can easily load MOSAD as a pandas data frame and explore the annoatated TS with our data loader. For an in-depth data exploration, see our <a target="_blank" href="https://github.com/ermshaua/mobile-sensing-human-activity-data-set/blob/main/notebooks/data_set_exploration.ipynb">Jupyter notebook</a>.
+
+```python3
+>>> from src.utils import load_mosad_dataset
+>>> df_mosad = load_mosad_dataset()
+>>> df_mosad.head()
+...
+```
+
 ## Benchmark Results
 
 We have evaluated six TSS algorithms on MOSAD. The following table summarises the average Covering performance (higher is better) and the corresponding average ranks. More details are in the paper. The raw measurements are <a target="_blank" href="https://github.com/ermshaua/mobile-sensing-human-activity-data-set/blob/main/experiments">here</a> and an analysis Jupyter notebook is <a target="_blank" href="https://github.com/ermshaua/mobile-sensing-human-activity-data-set/blob/main/notebooks/competitor.ipynb">here</a>.

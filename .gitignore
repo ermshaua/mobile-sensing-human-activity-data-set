@@ -25,4 +25,3 @@ __pycache__
 .DS_Store
 tmp/
 deploy.sh
-.key

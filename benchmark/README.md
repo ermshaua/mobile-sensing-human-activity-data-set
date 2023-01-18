@@ -1,0 +1,2 @@
+# Benchmark
+This folder contains the evaluation source codes to run the six TSS competitors on MOSAD. You can use the `simple_test.py` to explore the algorithms and `competitor_test.py` to run the benchmark. The raw results are written into `../experiments/`.

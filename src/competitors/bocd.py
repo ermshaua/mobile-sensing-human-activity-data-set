@@ -1,6 +1,6 @@
 import numpy as np
 
-from bocd import BayesianOnlineChangePointDetection, ConstantHazard,StudentT
+from bocd import BayesianOnlineChangePointDetection, ConstantHazard, StudentT
 
 
 def bocd(ts, n_cps, return_profile=False):

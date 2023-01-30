@@ -19,7 +19,7 @@ def load_mosad_dataset():
         for line in file.readlines():
             line = line.split(",")
             routine, motions = line[0], line[1:]
-            activities[routine] = motions
+            activities[routine] = [motion.replace("\n", "") for motion in motions]
 
     ts_filename = ABS_PATH + "/../datasets/data.npz"
     T = np.load(file=ts_filename)

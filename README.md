@@ -42,7 +42,16 @@ You can download this repository (by clicking the download button in the upper r
 
 ## Citation
 
-This work is currently under review. After publishing, we include a citation reference here.
+If you want reference our work in your scientific publication, we would appreciate the following citation:
+
+```
+@inproceedings{wss2022,
+  title={Time Series Segmentation Applied to a New Data Set for Mobile Sensing of Human Activities},
+  author={Ermshaus, Arik and Singh, Sunita and Leser, Ulf},
+  booktitle={DARLI-AP@EDBT/ICDT},
+  year={2023}
+}
+```
 
 ## Resources
 

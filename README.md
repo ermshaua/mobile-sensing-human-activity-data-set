@@ -45,7 +45,7 @@ You can download this repository (by clicking the download button in the upper r
 If you want reference our work in your scientific publication, we would appreciate the following citation:
 
 ```
-@inproceedings{wss2022,
+@inproceedings{mosad2023,
   title={Time Series Segmentation Applied to a New Data Set for Mobile Sensing of Human Activities},
   author={Ermshaus, Arik and Singh, Sunita and Leser, Ulf},
   booktitle={DARLI-AP@EDBT/ICDT},

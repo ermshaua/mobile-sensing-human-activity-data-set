@@ -1,13 +1,13 @@
+import warnings
+from queue import PriorityQueue
+
 import numpy as np
 import pandas as pd
-
-from src.competitors.clasp.profile import _labels, binary_roc_auc_score
-from src.competitors.clasp.profile import ClaSPEnsemble
-
-from src.competitors.clasp.suss import suss
-
-from queue import PriorityQueue
 from scipy.stats import ranksums
+
+from src.competitors.clasp.profile import ClaSPEnsemble
+from src.competitors.clasp.profile import _labels, binary_roc_auc_score
+from src.competitors.clasp.suss import suss
 
 
 def rank_sums_test(knn, change_point, window_size, threshold=1e-15):
@@ -16,7 +16,11 @@ def rank_sums_test(knn, change_point, window_size, threshold=1e-15):
     return p <= threshold
 
 
-def clasp_segmentation(time_series, window_size=None, n_change_points=None, min_seg_size=None, k_neighbours=3, n_iter=30, score=binary_roc_auc_score, threshold=1e-15, offset=.05):
+def clasp_segmentation(time_series, window_size=None, n_change_points=None, min_seg_size=None, k_neighbours=3,
+                       n_iter=30, score=binary_roc_auc_score, threshold=1e-15, offset=.05):
+    warnings.warn(
+        "This code is only for reproducibility. If you want to use ClaSP in your scientific publication or application, please use the updated and maintained claspy Python package: https://github.com/ermshaua/claspy")
+
     queue = PriorityQueue()
 
     if window_size is None:
@@ -47,7 +51,8 @@ def clasp_segmentation(time_series, window_size=None, n_change_points=None, min_
 
     tc_profile, tc_knn, tc_change_point = clasp.applc_tc(profile, change_point)
 
-    if penalize is False or (tc_profile is not None and rank_sums_test(tc_knn, tc_change_point, window_size, threshold)):
+    if penalize is False or (
+            tc_profile is not None and rank_sums_test(tc_knn, tc_change_point, window_size, threshold)):
         queue.put((-global_score, (np.arange(time_series.shape[0]).tolist(), profile, change_point, global_score)))
 
     change_points = []
@@ -63,10 +68,10 @@ def clasp_segmentation(time_series, window_size=None, n_change_points=None, min_
             change_points.append(change_point)
             scores.append(local_score)
 
-            ind = np.asarray(local_range[:-window_size+1], dtype=np.int64)
+            ind = np.asarray(local_range[:-window_size + 1], dtype=np.int64)
             profile[ind] = np.max([profile[ind], local_profile], axis=0)
 
-        if idx == n_change_points-1 or len(change_points) == n_change_points:
+        if idx == n_change_points - 1 or len(change_points) == n_change_points:
             break
 
         left_range = np.arange(local_range[0], change_point).tolist()
@@ -109,8 +114,9 @@ def _cp_valid(candidate, change_points, n_timepoints, min_seg_size):
     return True
 
 
-def _local_segmentation(queue, time_series, window_size, interval_knn, profile, ts_range, change_points, k_neighbours, n_iter, score, min_seg_size, offset, penalize, threshold):
-    if len(ts_range) < 2*min_seg_size: return
+def _local_segmentation(queue, time_series, window_size, interval_knn, profile, ts_range, change_points, k_neighbours,
+                        n_iter, score, min_seg_size, offset, penalize, threshold):
+    if len(ts_range) < 2 * min_seg_size: return
     n_timepoints = time_series.shape[0]
 
     # compute local profile and change point
@@ -120,7 +126,7 @@ def _local_segmentation(queue, time_series, window_size, interval_knn, profile, 
         n_iter=n_iter,
         score=score,
         interval_knn=interval_knn,
-        interval=(ts_range[0], ts_range[-1]+1),
+        interval=(ts_range[0], ts_range[-1] + 1),
         offset=offset,
         min_seg_size=min_seg_size,
     )
@@ -139,12 +145,6 @@ def _local_segmentation(queue, time_series, window_size, interval_knn, profile, 
     tc_profile, tc_knn, tc_change_point = local_clasp.applc_tc(local_profile, local_change_point)
 
     # apply penalty checks
-    if penalize is False or (tc_profile is not None and rank_sums_test(tc_knn, tc_change_point, window_size, threshold)):
-       queue.put((-local_score, [ts_range, local_profile, global_change_point, local_score]))
-
-
-
-
-
-
-
+    if penalize is False or (
+            tc_profile is not None and rank_sums_test(tc_knn, tc_change_point, window_size, threshold)):
+        queue.put((-local_score, [ts_range, local_profile, global_change_point, local_score]))
